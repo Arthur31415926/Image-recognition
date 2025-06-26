@@ -222,6 +222,19 @@ def launch_worker_instance():
 
     log.info(f"Launching worker instance with AMI={ami}, SG={sg_id}, IAM={iam_profile}...")
 
+    user_data_script = f"""#!/bin/bash
+    yum update -y
+    yum install -y git python3 python3-pip
+    cd /home/ec2-user
+    git clone https://github.com/Arthur31415926/Image-recognition.git
+    cd Image-recognition
+    python3 -m venv venv
+    source venv/bin/activate
+    pip install --upgrade pip
+    pip install -r requirements.txt
+    python3 worker.py
+    """
+
     ec2.run_instances(
         ImageId=ami,
         InstanceType=Config.INSTANCE_TYPE,
@@ -236,8 +249,10 @@ def launch_worker_instance():
                 {"Key": "Name", "Value": f"{Config.WORKER_TAG}-{int(time.time())}"},
                 {"Key": "Role", "Value": Config.WORKER_TAG}
             ]
-        }]
+        }],
+        UserData=user_data_script
     )
+
 
 
 def terminate_worker_instance(instance_id):
