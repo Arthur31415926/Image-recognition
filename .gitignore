@@ -1,0 +1,18 @@
+# Ignore Python cache and virtual environments
+__pycache__/
+*.py[cod]
+*.egg-info/
+env/
+venv/
+
+# Ignore environment configuration
+#.env
+
+# Ignore logs and system files
+*.log
+.DS_Store
+
+# Ignore VSCode or PyCharm project settings
+.vscode/
+.idea/
+
